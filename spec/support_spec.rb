@@ -58,6 +58,18 @@ describe RSpec::Puppet::Support do
       expect(subject.str_from_value({:k1=>'v1'})).to eq('{ "k1" => "v1" }')
       expect(subject.str_from_value({'k2'=>'v2'})).to eq('{ "k2" => "v2" }')
     end
+    it "should handle Sensitive type" do
+      expect(subject.str_from_value(Puppet::Pops::Types::PSensitiveType::Sensitive.new('foo'))).to eq('Sensitive.new("foo")')
+    end
+    it "should handle Binary type" do
+      expect(subject.str_from_value(Puppet::Pops::Types::PBinaryType::Binary.new('asdf'))).to eq('Binary.new("YXNkZg==")')
+    end
+    it "should handle a Time type" do
+      expect(subject.str_from_value(Time.at(1537883350, 170446.575))).to eq('Timestamp.new(1537883350.1704466)')
+    end
+    it "should handle a Regexp type" do
+      expect(subject.str_from_value(Regexp.new('^foo.*$'))).to eq('Regexp.new(\'^foo.*$\')')
+    end
   end
 
   describe '#find_pretend_platform' do

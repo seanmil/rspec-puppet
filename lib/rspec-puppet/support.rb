@@ -331,6 +331,14 @@ module RSpec::Puppet
         'undef'  # verbatim undef keyword
       when Symbol
         str_from_value(value.to_s)
+      when Time
+        "Timestamp.new(#{value.to_f})"
+      when Regexp
+        "Regexp.new('#{value.inspect[1..-2]}')"
+      when Puppet::Pops::Types::PSensitiveType::Sensitive
+        "Sensitive.new(#{escape_special_chars(value.unwrap.inspect)})"
+      when Puppet::Pops::Types::PBinaryType::Binary
+        "Binary.new(#{value.to_s.inspect})"
       else
         escape_special_chars(value.inspect)
       end
